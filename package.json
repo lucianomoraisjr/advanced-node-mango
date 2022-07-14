@@ -4,7 +4,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node dist/main/api",
-    "build": "rimraf tsc && tsc"
+    "build": "rimraf tsc && tsc -p tsconfig -build.json",
+    "lint": "eslint .",
+    "lint:fix": "yarn lint -- --fix"
   },
   "repository": "https://github.com/lucianomoraisjr/advanced-node-mango.git",
   "author": "Luciano Junior <lucianomoraisjr@gmail.com>",
