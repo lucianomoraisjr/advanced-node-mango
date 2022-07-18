@@ -51,7 +51,20 @@ describe('FacebookAuthenticationService', () => {
   it('shold call UpdateFacebookAccountRepo when LoadUserAccountRepo returns data', async () => {
     userAccountRepo.load.mockResolvedValueOnce({
       id: 'any_id',
-      name: 'any_fb_name'
+      name: 'any_name'
+    })
+    await sut.perform({ token })
+    expect(userAccountRepo.updatewithFaceboook).toHaveBeenCalledWith({
+      id: 'any_id',
+      name: 'any_name',
+      facebookId: 'any_fb_id'
+    })
+    expect(userAccountRepo.updatewithFaceboook).toHaveBeenCalledTimes(1)
+  })
+  it('shold update account name', async () => {
+    userAccountRepo.load.mockResolvedValueOnce({
+      id: 'any_id'
+
     })
     await sut.perform({ token })
     expect(userAccountRepo.updatewithFaceboook).toHaveBeenCalledWith({
