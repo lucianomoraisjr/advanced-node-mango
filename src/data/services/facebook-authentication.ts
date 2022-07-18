@@ -1,12 +1,12 @@
 import { AuthenticationError } from '@/domain/errors'
 import { FacebookAuthentication } from '@/domain/features'
 import { LoadFacebookUserApi } from '@/data/contracts/apis'
-import { CreateFacebookAccountRepository, LoadUserAccountRepository, UpdateFacebookAccountRepository } from '../contracts/repos'
+import { LoadUserAccountRepository, SaveFacebookAccountRepository } from '../contracts/repos'
 
 export class FacebookAuthenticationService {
   constructor (
     private readonly facebookApi: LoadFacebookUserApi,
-    private readonly userAccountRepo: LoadUserAccountRepository & CreateFacebookAccountRepository & UpdateFacebookAccountRepository
+    private readonly userAccountRepo: LoadUserAccountRepository & SaveFacebookAccountRepository
 
   ) {}
 
@@ -14,15 +14,13 @@ export class FacebookAuthenticationService {
     const fbData = await this.facebookApi.loadUser(params)
     if (fbData !== undefined) {
       const accountData = await this.userAccountRepo.load({ email: fbData.email })
-      if (accountData !== undefined) {
-        await this.userAccountRepo.updatewithFaceboook({
-          id: accountData.id,
-          name: accountData.name ?? fbData.name,
-          facebookId: fbData.facebookId
-        })
-      } else {
-        await this.userAccountRepo.createFromFaceboook(fbData)
-      }
+      await this.userAccountRepo.saveWithFaceboook({
+        id: accountData?.id,
+        name: accountData?.name ?? fbData.name,
+        email: fbData.email,
+        facebookId: fbData.facebookId
+
+      })
     }
     return new AuthenticationError()
   }
