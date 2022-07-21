@@ -1,4 +1,4 @@
 # advanced-node-mango
 curso rodrigo manguinho NodeJs Avançado com TDD, Clean Architecture e Typescript
 
-Aula 27 10:49
+Aula 27 13:43
