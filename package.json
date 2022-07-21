@@ -17,6 +17,7 @@
   "author": "Luciano Junior <lucianomoraisjr@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "@types/axios": "^0.14.0",
     "@types/jest": "^28.1.5",
     "@types/module-alias": "^2.0.1",
     "@types/node": "^18.0.3",
@@ -34,6 +35,7 @@
     "typescript": "^4.7.4"
   },
   "dependencies": {
+    "axios": "^0.27.2",
     "module-alias": "^2.2.2",
     "rimraf": "^3.0.2"
   },
