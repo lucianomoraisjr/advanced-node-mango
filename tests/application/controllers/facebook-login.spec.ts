@@ -21,4 +21,12 @@ describe('FacebookLoginController', () => {
       data: new Error('The field token is required')
     })
   })
+  it('should return 400 if null', async () => {
+    const sut = new FacebookLoginController()
+    const httoResponse = await sut.handle({ token: null })
+    expect(httoResponse).toEqual({
+      statusCode: 400,
+      data: new Error('The field token is required')
+    })
+  })
 })
