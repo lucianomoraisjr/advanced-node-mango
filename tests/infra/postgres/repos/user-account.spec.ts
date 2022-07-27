@@ -5,10 +5,10 @@ import { getRepository, Repository, getConnection } from 'typeorm'
 import { makeFakeDb } from '@/tests/infra/postgres/mokcs'
 
 describe('PgUerAccountRepository', () => {
+  let sut: PgUserAccountrepository
+  let pgUserRepo: Repository<PgUser>
+  let backup: IBackup
   describe('load', () => {
-    let sut: PgUserAccountrepository
-    let pgUserRepo: Repository<PgUser>
-    let backup: IBackup
     beforeAll(async () => {
       const db = await makeFakeDb([PgUser])
       backup = db.backup()
