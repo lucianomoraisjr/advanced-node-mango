@@ -3,7 +3,7 @@ import { FacebookAuthentication } from '@/domain/features'
 import { AccessToken } from '@/domain/models'
 import { mock, MockProxy } from 'jest-mock-extended'
 import { FacebookLoginController } from '@/application/controllers'
-import { ServerError } from '@/application/errors'
+import { ServerError, UnauthorizedError } from '@/application/errors'
 describe('FacebookLoginController', () => {
   let facebookAuth: MockProxy<FacebookAuthentication>
   let sut: FacebookLoginController
@@ -45,7 +45,7 @@ describe('FacebookLoginController', () => {
     const httpResponse = await sut.handle({ token: 'any_invalid_token' })
     expect(httpResponse).toEqual({
       statusCode: 401,
-      data: new AuthenticationError()
+      data: new UnauthorizedError()
     })
   })
   it('should return 200 if authentication succeeds', async () => {
