@@ -5,7 +5,8 @@ import { mock, MockProxy } from 'jest-mock-extended'
 import { FacebookLoginController } from '@/application/controllers'
 import { ServerError, UnauthorizedError } from '@/application/errors'
 import { RequiredStringValidator } from '@/application/validation/required-string'
-jest.mock('@/application/validation/required-string')
+import { ValidationComposite } from '@/application/validation/composite'
+jest.mock('@/application/validation/composite')
 describe('FacebookLoginController', () => {
   let facebookAuth: MockProxy<FacebookAuthentication>
   let sut: FacebookLoginController
@@ -20,8 +21,11 @@ describe('FacebookLoginController', () => {
   })
   it('should call RequiredStringValidator with correct params', async () => {
     await sut.handle({ token })
-    expect(RequiredStringValidator).toHaveBeenCalledWith(token, 'token')
-    expect(RequiredStringValidator).toHaveBeenCalledTimes(1)
+
+    expect(ValidationComposite).toHaveBeenCalledWith([
+      new RequiredStringValidator('any_token', 'token')
+    ])
+    expect(ValidationComposite).toHaveBeenCalledTimes(1)
   })
 
   it('should call FacebookAuthentication with correct params', async () => {
