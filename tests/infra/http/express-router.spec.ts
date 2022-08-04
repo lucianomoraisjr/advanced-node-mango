@@ -11,14 +11,26 @@ class ExpressRouter {
 }
 
 describe('ExpressRouter', () => {
+  let sut: ExpressRouter
+  let controller: Controller
+  beforeAll(() => {
+    controller = mock<Controller>()
+  })
+  beforeEach(() => {
+    sut = new ExpressRouter(controller)
+  })
   it('shoud call handle with correct request', async () => {
     const req = getMockReq({ body: { any: 'any' } })
     const { res } = getMockRes()
-    const controller = mock<Controller>()
-    const sut = new ExpressRouter(controller)
-
     await sut.adapt(req, res)
 
     expect(controller.handle).toHaveBeenCalledWith({ any: 'any' })
+  })
+  it('shoud call handle with correct request', async () => {
+    const req = getMockReq()
+    const { res } = getMockRes()
+    await sut.adapt(req, res)
+
+    expect(controller.handle).toHaveBeenCalledWith({})
   })
 })
