@@ -4,21 +4,18 @@ import { makeFakeDb } from '@/tests/infra/postgres/mokcs'
 import { IBackup } from 'pg-mem'
 import { getConnection } from 'typeorm'
 import request from 'supertest'
+import { UnauthorizedError } from '@/application/errors'
 
-const FacebookApistub = jest.fn().mockImplementation(() => ({
-  loadUser: jest.fn().mockResolvedValue({
-    facebookId: 'any',
-    name: 'any',
-    email: 'any'
-  })
-}))
-jest.mock('@/infra/apis', () => {
-  return {
-    FacebookApi: jest.fn().mockImplementation(FacebookApistub)
-  }
-})
 describe('Login Routes', () => {
   describe('POST /login/facebook', () => {
+    const loadUserSpy = jest.fn()
+    jest.mock('@/infra/apis/facebook', () => {
+      return {
+        FacebookApi: jest.fn().mockReturnValue({
+          loadUser: loadUserSpy
+        })
+      }
+    })
     let backup: IBackup
     beforeAll(async () => {
       const db = await makeFakeDb([PgUser])
@@ -28,14 +25,15 @@ describe('Login Routes', () => {
       await getConnection().close()
     })
     beforeEach(() => {
-      FacebookApistub.mockClear()
       backup.restore()
     })
-    it('shold return 200 with AccessToken', async () => {
-      await request(app)
+    it('shold return 401 with UnauthorizedError', async () => {
+      const { status, body } = await request(app)
         .post('/api/login/facebook')
-        .send({ token: 'valid_token' })
-        .expect(200)
+        .send({ token: 'invalid_token' })
+
+      expect(status).toBe(401)
+      expect(body.error).toBe(new UnauthorizedError().message)
     })
   })
 })
