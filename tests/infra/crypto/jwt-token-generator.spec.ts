@@ -41,4 +41,15 @@ describe('JwtTokenHandle', () => {
       await expect(promise).rejects.toThrow(new Error('token_error'))
     })
   })
+  describe('generateToken', () => {
+    let token: string
+    beforeAll(() => {
+      token = 'token_any'
+    })
+    it('should call sign with correct params', async () => {
+      await sut.validateToken({ token })
+
+      expect(fakeJwt.verify).toHaveBeenCalledWith(token, secret)
+    })
+  })
 })
