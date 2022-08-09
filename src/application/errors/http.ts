@@ -18,3 +18,9 @@ export class UnauthorizedError extends Error {
     this.name = 'UnauthorizedError'
   }
 }
+export class ForbiddenError extends Error {
+  constructor () {
+    super('Acess denied')
+    this.name = 'ForbiddenError'
+  }
+}
