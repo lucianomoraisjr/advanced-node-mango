@@ -26,18 +26,18 @@ describe('JwtTokenHandle', () => {
       fakeJwt.sign.mockImplementation(() => token)
     })
     it('should call sign with correct params', async () => {
-      await sut.generateToken({ key, expirationInMs })
+      await sut.generate({ key, expirationInMs })
 
       expect(fakeJwt.sign).toHaveBeenCalledWith({ key }, secret, { expiresIn: 1 })
     })
 
     it('should return data on success', async () => {
-      const token = await sut.generateToken({ key, expirationInMs })
+      const token = await sut.generate({ key, expirationInMs })
       expect(token).toBe(token)
     })
     it('should rethrow if sign throws', async () => {
       fakeJwt.sign.mockImplementationOnce(() => { throw new Error('token_error') })
-      const promise = sut.generateToken({ key, expirationInMs })
+      const promise = sut.generate({ key, expirationInMs })
       await expect(promise).rejects.toThrow(new Error('token_error'))
     })
   })
@@ -50,25 +50,25 @@ describe('JwtTokenHandle', () => {
       fakeJwt.verify.mockImplementation(() => ({ key }))
     })
     it('should call sign with correct params', async () => {
-      await sut.validateToken({ token })
+      await sut.validate({ token })
 
       expect(fakeJwt.verify).toHaveBeenCalledWith(token, secret)
     })
     it('should rethrow the key used to sign', async () => {
-      const generateToken = await sut.validateToken({ token })
+      const generateToken = await sut.validate({ token })
       expect(generateToken).toBe(key)
     })
     it('should throw if verify throws', async () => {
       fakeJwt.verify.mockImplementationOnce(() => { throw new Error('key_error') })
 
-      const promise = sut.validateToken({ token })
+      const promise = sut.validate({ token })
 
       await expect(promise).rejects.toThrow(new Error('key_error'))
     })
     it('should throw if verify returns null', async () => {
       fakeJwt.verify.mockImplementationOnce(() => null)
 
-      const promise = sut.validateToken({ token })
+      const promise = sut.validate({ token })
 
       await expect(promise).rejects.toThrow()
     })
