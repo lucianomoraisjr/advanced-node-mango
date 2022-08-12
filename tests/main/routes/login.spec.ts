@@ -9,6 +9,7 @@ import { UnauthorizedError } from '@/application/errors'
 describe('Login Routes', () => {
   describe('POST /login/facebook', () => {
     const loadUserSpy = jest.fn()
+
     jest.mock('@/infra/apis/facebook', () => {
       return {
         FacebookApi: jest.fn().mockReturnValue({
