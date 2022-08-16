@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { HttpGetClient } from './client'
+import { HttpGetClient } from '@/infra/gateways'
 
 export class AxiosHttpClient {
   async get ({ params, url }: HttpGetClient.Params): Promise<any> {

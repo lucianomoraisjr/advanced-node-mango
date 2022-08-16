@@ -1,4 +1,4 @@
-import { JwtTokenHandle } from '@/infra/crypto'
+import { JwtTokenHandle } from '@/infra/gateways'
 
 import jwt from 'jsonwebtoken'
 
