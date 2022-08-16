@@ -1,4 +1,4 @@
-import { PgUser } from '@/infra/postgres/entities'
+import { PgUser } from '@/infra/repos/postgres/entities'
 import { app } from '@/main/config/app'
 import { makeFakeDb } from '@/tests/infra/postgres/mokcs'
 import { IBackup } from 'pg-mem'

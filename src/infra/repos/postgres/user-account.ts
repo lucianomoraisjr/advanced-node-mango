@@ -1,6 +1,6 @@
 import { LoadUserAccount, SaveFacebookAccount } from '@/domain/contracts/repos'
 import { getRepository } from 'typeorm'
-import { PgUser } from '@/infra/postgres/entities'
+import { PgUser } from '@/infra/repos/postgres/entities'
 
 type LoadParams = LoadUserAccount.Params
 type LoadResult = LoadUserAccount.Result

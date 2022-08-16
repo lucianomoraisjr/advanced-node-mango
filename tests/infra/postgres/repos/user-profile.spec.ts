@@ -1,5 +1,5 @@
-import { PgUserProfileRepository } from '@/infra/postgres/repos'
-import { PgUser } from '@/infra/postgres/entities'
+import { PgUserProfileRepository } from '@/infra/repos/postgres'
+import { PgUser } from '@/infra/repos/postgres/entities'
 import { makeFakeDb } from '@/tests/infra/postgres/mokcs'
 
 import { IBackup } from 'pg-mem'
