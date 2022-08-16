@@ -1,5 +1,6 @@
 import { UploadFile, UUIDGenerator, DeleteFile } from '@/domain/contracts/gateways'
 import { SaveUserPicture, LoadUserProfile } from '@/domain/contracts/repos'
+import { UserProfile } from '@/domain/entities'
 import { ChangeProfilePicture, setupChangeProfilePicture } from '@/domain/use-cases'
 
 import { mock, MockProxy } from 'jest-mock-extended'
@@ -42,12 +43,21 @@ describe('ChangeProfilePicture', () => {
     expect(fileStorage.upload).not.toHaveBeenCalled()
   })
 
-  // it('should call SaveUserPicture with correct input', async () => {
-  //   await sut({ id: 'any_id', file })
+  it('should call SaveUserPicture with correct input', async () => {
+    await sut({ id: 'any_id', file })
 
-  //   expect(userProfileRepo.savePicture).toHaveBeenCalledWith(...mocked(UserProfile).mock.instances)
-  //   expect(userProfileRepo.savePicture).toHaveBeenCalledTimes(1)
-  // })
+    expect(userProfileRepo.savePicture).toHaveBeenCalledWith(...jest.mocked(UserProfile).mock.instances)
+    expect(userProfileRepo.savePicture).toHaveBeenCalledTimes(1)
+  })
+
+  it('should call SaveUserPicture with correct input', async () => {
+    userProfileRepo.load.mockResolvedValueOnce(undefined)
+
+    await sut({ id: 'any_id', file })
+
+    expect(userProfileRepo.savePicture).toHaveBeenCalledWith(...jest.mocked(UserProfile).mock.instances)
+    expect(userProfileRepo.savePicture).toHaveBeenCalledTimes(1)
+  })
 
   it('should call LoadUserProfile with correct input', async () => {
     await sut({ id: 'any_id', file: undefined })
@@ -62,24 +72,26 @@ describe('ChangeProfilePicture', () => {
     expect(userProfileRepo.load).not.toHaveBeenCalled()
   })
 
-  // it('should return correct data on success', async () => {
-  //   mocked(UserProfile).mockImplementationOnce(id => ({
-  //     setPicture: jest.fn(),
-  //     id: 'any_id',
-  //     pictureUrl: 'any_url',
-  //     initials: 'any_initials'
-  //   }))
+  it('should return correct data on success', async () => {
+    jest.mocked(UserProfile).mockImplementationOnce(id => ({
+      setPicture: jest.fn(),
+      id: 'any_id',
+      pictureUrl: 'any_url',
+      initials: 'any_initials'
+    }))
 
-  //   const result = await sut({ id: 'any_id', file })
+    const result = await sut({ id: 'any_id', file })
 
-  //   expect(result).toMatchObject({
-  //     pictureUrl: 'any_url',
-  //     initials: 'any_initials'
-  //   })
-  // })
+    expect(result).toMatchObject({
+      pictureUrl: 'any_url',
+      initials: 'any_initials'
+    })
+  })
+
   it('should call DeleteFile when file exists and SaveUserPicture throws', async () => {
     userProfileRepo.savePicture.mockRejectedValueOnce(new Error())
     expect.assertions(2)
+
     const promise = sut({ id: 'any_id', file })
 
     promise.catch(() => {
@@ -87,6 +99,7 @@ describe('ChangeProfilePicture', () => {
       expect(fileStorage.delete).toHaveBeenCalledTimes(1)
     })
   })
+
   it('should not call DeleteFile when file does not exists and SaveUserPicture throws', async () => {
     userProfileRepo.savePicture.mockRejectedValueOnce(new Error())
     expect.assertions(1)
@@ -97,9 +110,37 @@ describe('ChangeProfilePicture', () => {
       expect(fileStorage.delete).not.toHaveBeenCalled()
     })
   })
+
   it('should rethrow if SaveUserPicture throws', async () => {
     const error = new Error('save_error')
     userProfileRepo.savePicture.mockRejectedValueOnce(error)
+
+    const promise = sut({ id: 'any_id', file })
+
+    await expect(promise).rejects.toThrow(error)
+  })
+
+  it('should rethrow if UploadFile throws', async () => {
+    const error = new Error('upload_error')
+    fileStorage.upload.mockRejectedValueOnce(error)
+
+    const promise = sut({ id: 'any_id', file })
+
+    await expect(promise).rejects.toThrow(error)
+  })
+
+  it('should rethrow if LoadUserProfile throws', async () => {
+    const error = new Error('load_error')
+    userProfileRepo.load.mockRejectedValueOnce(error)
+
+    const promise = sut({ id: 'any_id', file: undefined })
+
+    await expect(promise).rejects.toThrow(error)
+  })
+
+  it('should rethrow if UUIDGenerator throws', async () => {
+    const error = new Error('uuid_error')
+    crypto.uuid.mockImplementationOnce(() => { throw error })
 
     const promise = sut({ id: 'any_id', file })
 
