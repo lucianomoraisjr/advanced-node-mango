@@ -59,7 +59,7 @@ describe('PgUerAccountRepository', () => {
         facebookId: 'any_fb_id'
       })
       const pgUser = await pgUserRepo.findOne({ where: { id: '1' } })
-      expect(pgUser).toEqual({
+      expect(pgUser).toMatchObject({
         id: 1,
         email: 'any_email',
         name: 'any_email',

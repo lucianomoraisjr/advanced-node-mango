@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm'
 
 @Entity({ name: 'usuarios' })
 export class PgUser {
@@ -13,4 +13,10 @@ export class PgUser {
 
   @Column({ name: 'id_facebook', nullable: true })
     facebookId?: string
+
+  @Column({ name: 'foto', nullable: true })
+    pictureUrl?: string
+
+  @Column({ name: 'iniciais', nullable: true })
+    initials?: string
 }
