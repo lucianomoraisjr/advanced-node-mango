@@ -2,7 +2,7 @@ import { PgUser } from '@/infra/repos/postgres/entities'
 import { PgUserAccountrepository } from '@/infra/repos/postgres'
 import { IBackup } from 'pg-mem'
 import { getRepository, Repository, getConnection } from 'typeorm'
-import { makeFakeDb } from '@/tests/infra/postgres/mokcs'
+import { makeFakeDb } from '@/tests/infra/repos/postgres/mokcs'
 
 describe('PgUerAccountRepository', () => {
   let sut: PgUserAccountrepository

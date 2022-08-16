@@ -1,6 +1,6 @@
 import { PgUser } from '@/infra/repos/postgres/entities'
 import { app } from '@/main/config/app'
-import { makeFakeDb } from '@/tests/infra/postgres/mokcs'
+import { makeFakeDb } from '@/tests/infra/repos/postgres/mokcs'
 import { IBackup } from 'pg-mem'
 import { getConnection } from 'typeorm'
 import request from 'supertest'

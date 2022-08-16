@@ -1,6 +1,6 @@
 import { PgUserProfileRepository } from '@/infra/repos/postgres'
 import { PgUser } from '@/infra/repos/postgres/entities'
-import { makeFakeDb } from '@/tests/infra/postgres/mokcs'
+import { makeFakeDb } from '@/tests/infra/repos/postgres/mokcs'
 
 import { IBackup } from 'pg-mem'
 import { getRepository, Repository, getConnection } from 'typeorm'
@@ -33,6 +33,16 @@ describe('PgUserProfileRepository', () => {
       const pgUser = await pgUserRepo.findOne({ id })
 
       expect(pgUser).toMatchObject({ id, pictureUrl: 'any_url', initials: null })
+    })
+  })
+
+  describe('savePicture', () => {
+    it('should load user profile', async () => {
+      const { id } = await pgUserRepo.save({ email: 'any_email', name: 'any_name' })
+
+      const userProfile = await sut.load({ id: id.toString() })
+
+      expect(userProfile?.name).toBe('any_name')
     })
   })
 })
